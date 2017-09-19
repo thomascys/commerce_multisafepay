@@ -1,0 +1,4 @@
+services:
+  commerce_multisafepay.client:
+    class: Drupal\commerce_multisafepay\MultiSafepayClient
+    arguments: ['@http_client', '@logger.channel.api']
