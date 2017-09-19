@@ -1,0 +1,5 @@
+name: Commerce MultiSafepay
+type: module
+description: Provides Commerce integration for MultiSafepay Payments.
+core: 8.x
+package: Commerce (contrib)

@@ -1,0 +1,9 @@
+{
+  "name": "drupal/commerce_multisafepay",
+  "type": "drupal-module",
+  "description": "Party",
+  "keywords": ["Drupal"],
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "require": { }
+}
