@@ -13,8 +13,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * @package Drupal\commerce_multisafepay
  */
 abstract class MultiSafepayClientBase {
-  const API_TEST_URL = 'https://testapi.multisafepay.com/v1/json';
-  const API_LIVE_URL = 'https://api.multisafepay.com/v1/json';
+  const API_TEST_URL = 'https://testapi.multisafepay.com/v1/json/';
+  const API_LIVE_URL = 'https://api.multisafepay.com/v1/json/';
   protected $client;
   protected $logger;
   protected $options;
@@ -39,9 +39,9 @@ abstract class MultiSafepayClientBase {
    * @throws \Exception
    */
   public function handleRequest(string $http_method, string $method, array $data) {
-    $parameters = new ParameterBag($data);
+    $options = $this->buildOptions($http_method, $data);
     try {
-      $request = $this->client->request($http_method, $method, $parameters);
+      $request = $this->client->request($http_method, $method, $options);
     }
     catch (\Exception $error) {
       $message = 'Received no response from MultiSafepay!';
@@ -56,14 +56,14 @@ abstract class MultiSafepayClientBase {
 
   /**
    * @param string $http_method
-   * @param \Symfony\Component\HttpFoundation\ParameterBag $data
+   * @param array $data
    *
    * @return int
    */
-  protected function buildOptions(string $http_method, ParameterBag $data) {
+  protected function buildOptions(string $http_method, array $data) {
     switch ($http_method) {
       case 'POST':
-        $options = $this->options + ['body' => $data];
+        $options = $this->options + ['form_params' => $data];
         break;
 
       case 'GET':
@@ -77,7 +77,7 @@ abstract class MultiSafepayClientBase {
    * @param string $api_key
    * @param string $env
    */
-  protected function setOptions(string $api_key, string $env = 'test') {
+  public function setOptions(string $api_key, string $env = 'test') {
     $this->options = [
       'base_uri' => $env === 'live' ? self::API_LIVE_URL : self::API_TEST_URL,
       'headers' => [
