@@ -96,4 +96,11 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
     parent::onCancel($order, $request);
   }
 
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   */
+  public function onNotify(Request $request) {
+    parent::onNotify($request);
+  }
+
 }

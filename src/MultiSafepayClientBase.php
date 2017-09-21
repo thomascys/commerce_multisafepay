@@ -75,11 +75,11 @@ abstract class MultiSafepayClientBase {
 
   /**
    * @param string $api_key
-   * @param string $env
+   * @param string $mode
    */
-  public function setOptions(string $api_key, string $env = 'test') {
+  public function setOptions(string $api_key, string $mode = 'test') {
     $this->options = [
-      'base_uri' => $env === 'live' ? self::API_LIVE_URL : self::API_TEST_URL,
+      'base_uri' => $mode === 'live' ? self::API_LIVE_URL : self::API_TEST_URL,
       'headers' => [
         'api_key' => $api_key
       ],
