@@ -38,7 +38,7 @@ abstract class MultiSafepayClientBase {
    * @return mixed
    * @throws \Exception
    */
-  public function handleRequest(string $http_method, string $method, array $data) {
+  public function handleRequest(string $http_method, string $method, array $data = []) {
     $options = $this->buildOptions($http_method, $data);
     try {
       $request = $this->client->request($http_method, $method, $options);
