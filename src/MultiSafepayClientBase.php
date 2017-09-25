@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  *
  * @package Drupal\commerce_multisafepay
  */
-abstract class MultiSafepayClientBase {
+abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
   const API_TEST_URL = 'https://testapi.multisafepay.com/v1/json/';
   const API_LIVE_URL = 'https://api.multisafepay.com/v1/json/';
   protected $client;
@@ -40,13 +40,13 @@ abstract class MultiSafepayClientBase {
    */
   public function handleRequest(string $http_method, string $method, array $data = []) {
     $options = $this->buildOptions($http_method, $data);
+
     try {
       $request = $this->client->request($http_method, $method, $options);
     }
-    catch (\Exception $error) {
-      $message = 'Received no response from MultiSafepay!';
-      $this->logger->critical($message);
-      throw new \Exception($message);
+    catch (\Exception $e) {
+      $this->logger->critical($e->getMessage());
+      throw new \Exception($e->getMessage());
     }
 
     $response = json_decode($request->getBody(), TRUE);
