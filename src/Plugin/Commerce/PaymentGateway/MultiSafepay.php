@@ -135,11 +135,12 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
     $payment_storage = $this->entityTypeManager->getStorage('commerce_payment');
     /** @var \Drupal\commerce_payment\Entity\Payment $payment */
     $payment = $payment_storage->loadByRemoteId($remote_id);
-    if ($payment) {
-      if ($remote_order['data']['status'] === 'completed') {
-        $payment->setState('capture_completed');
-      }
-      $payment->setRemoteState($remote_order['data']['status']);
+    $allowed_states = ['initialized', 'reserved', 'uncleared'];
+    if ($payment && in_array($payment->getRemoteState(), $allowed_states)) {
+      $remote_state = $remote_order['data']['status'];
+      $transition = $this->mapRemoteStateToTransition($remote_state);
+      $payment->getState()->applyTransition($transition);
+      $payment->setRemoteState($remote_state);
       $payment->save();
 
       return new JsonResponse('OK');
@@ -161,6 +162,15 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
 
       return new JsonResponse('OK');
     }
+  }
 
+  protected function mapRemoteStateToTransition($remote_state) {
+    $states = [
+      'completed' => 'capture',
+      'cancelled' => 'void',
+      'expired' => 'expire',
+      'refunded' => 'refund',
+      'partial_refunded' => 'partially_refund'
+    ];
   }
 }
