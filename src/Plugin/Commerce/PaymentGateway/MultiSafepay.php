@@ -129,16 +129,15 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
     }
     // Load the remote order.
     $remote_order = $this->multiSafepayClient->loadOrder($remote_id);
+    $remote_state = $remote_order['data']['status'];
 
     // Try to load the payment entity.
     /** @var \Drupal\commerce_payment\PaymentStorage $payment_storage */
     $payment_storage = $this->entityTypeManager->getStorage('commerce_payment');
     /** @var \Drupal\commerce_payment\Entity\Payment $payment */
     $payment = $payment_storage->loadByRemoteId($remote_id);
-    $allowed_states = ['initialized', 'reserved', 'uncleared'];
-    if ($payment && in_array($payment->getRemoteState(), $allowed_states)) {
-      $remote_state = $remote_order['data']['status'];
-      $transition = $this->mapRemoteStateToTransition($remote_state);
+    if ($payment) {
+      $transition = $payment->getState()->getWorkflow()->getTransition($this->mapRemoteStateToTransition($remote_state));
       $payment->getState()->applyTransition($transition);
       $payment->setRemoteState($remote_state);
       $payment->save();
@@ -158,12 +157,19 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
         'order_id' => $order_id,
         'remote_id' => $remote_id,
       ]);
+      $payment->setRemoteState($remote_state);
+
       $payment->save();
 
       return new JsonResponse('OK');
     }
   }
 
+  /**
+   * @param $remote_state
+   *
+   * @return string
+   */
   protected function mapRemoteStateToTransition($remote_state) {
     $states = [
       'completed' => 'capture',
@@ -172,5 +178,7 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
       'refunded' => 'refund',
       'partial_refunded' => 'partially_refund'
     ];
+
+    return $states[$remote_state];
   }
 }
