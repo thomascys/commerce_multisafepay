@@ -2,13 +2,11 @@
 
 namespace Drupal\commerce_multisafepay;
 
-
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Class MultiSafepayClientBase
+ * Class MultiSafepayClientBase.
  *
  * @package Drupal\commerce_multisafepay
  */
@@ -23,7 +21,9 @@ abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
    * MultiSafepayClientBase constructor.
    *
    * @param \GuzzleHttp\ClientInterface $client
+   *   Guzzle client.
    * @param \Psr\Log\LoggerInterface $logger
+   *   Watchdog logger.
    */
   public function __construct(ClientInterface $client, LoggerInterface $logger) {
     $this->client = $client;
@@ -31,12 +31,20 @@ abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
   }
 
   /**
-   * @param string $http_method
-   * @param string $method
-   * @param array $data
+   * Handle the request.
    *
-   * @return mixed
+   * @param string $http_method
+   *   Http method.
+   * @param string $method
+   *   Api method.
+   * @param array $data
+   *   Data array.
+   *
+   * @return array
+   *   Reponse.
+   *
    * @throws \Exception
+   *   Exception.
    */
   public function handleRequest(string $http_method, string $method, array $data = []) {
     $options = $this->buildOptions($http_method, $data);
@@ -55,10 +63,15 @@ abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
   }
 
   /**
-   * @param string $http_method
-   * @param array $data
+   * Build options needed for the request.
    *
-   * @return int
+   * @param string $http_method
+   *   Http method.
+   * @param array $data
+   *   Data array.
+   *
+   * @return array
+   *   Options.
    */
   protected function buildOptions(string $http_method, array $data) {
     switch ($http_method) {
@@ -74,15 +87,20 @@ abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
   }
 
   /**
+   * Set the mandatory options for the request.
+   *
    * @param string $api_key
+   *   The api key.
    * @param string $mode
+   *   Api mode.
    */
   public function setOptions(string $api_key, string $mode = 'test') {
     $this->options = [
       'base_uri' => $mode === 'live' ? self::API_LIVE_URL : self::API_TEST_URL,
       'headers' => [
-        'api_key' => $api_key
+        'api_key' => $api_key,
       ],
     ];
   }
+
 }

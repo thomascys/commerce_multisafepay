@@ -2,18 +2,19 @@
 
 namespace Drupal\commerce_multisafepay\PluginForm\OffsiteForm;
 
-
 use Drupal\commerce_payment\PluginForm\PaymentOffsiteForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class MultiSafepayPaymentOffsiteForm
+ * Class MultiSafepayPaymentOffsiteForm.
  *
  * @package Drupal\commerce_multisafepay\PluginForm\OffsiteForm
  */
 class MultiSafepayPaymentOffsiteForm extends PaymentOffsiteForm {
 
   /**
+   * The MultiSafepay client.
+   *
    * @var \Drupal\commerce_multisafepay\MultiSafepayClient
    */
   protected $multiSafepayClient;
@@ -29,7 +30,7 @@ class MultiSafepayPaymentOffsiteForm extends PaymentOffsiteForm {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form =  parent::buildConfigurationForm($form, $form_state);
+    $form = parent::buildConfigurationForm($form, $form_state);
 
     /** @var \Drupal\commerce_payment\Entity\PaymentInterface $payment */
     $payment = $this->entity;
@@ -46,13 +47,13 @@ class MultiSafepayPaymentOffsiteForm extends PaymentOffsiteForm {
       'order_id' => $payment->getOrderId(),
       'currency' => $payment->getAmount()->getCurrencyCode(),
       'amount' => $payment->getAmount()->getNumber() * 100,
-      'gateway' => null,
+      'gateway' => NULL,
       'description' => sprintf('order %s', $payment->getOrderId()),
-      'payment_options'=> [
-        'notification_url'=> $form['#capture'],
-        'redirect_url'=> $form['#return_url'],
-        'cancel_url'=> $form['#cancel_url'],
-        'close_window'=> true
+      'payment_options' => [
+        'notification_url' => $$payment_gateway_plugin->getNotifyUrl()->toString(),
+        'redirect_url' => $form['#return_url'],
+        'cancel_url' => $form['#cancel_url'],
+        'close_window' => TRUE,
       ],
     ];
 
@@ -60,4 +61,5 @@ class MultiSafepayPaymentOffsiteForm extends PaymentOffsiteForm {
 
     return $this->buildRedirectForm($form, $form_state, $redirect_url, [], self::REDIRECT_GET);;
   }
+
 }
