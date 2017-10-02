@@ -1,7 +1,7 @@
 {
   "name": "drupal/commerce_multisafepay",
   "type": "drupal-module",
-  "description": "Party",
+  "description": "Commerce 2.x MultiSafepay integration",
   "keywords": ["Drupal"],
   "license": "MIT",
   "minimum-stability": "dev",
