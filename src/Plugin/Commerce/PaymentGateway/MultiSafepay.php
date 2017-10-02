@@ -158,6 +158,11 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
       $payment->getState()->applyTransition($transition);
       $payment->setRemoteState($remote_state);
       $payment->save();
+      if ($remote_state === 'completed' && $payment->getState() === 'completed') {
+        $order = $payment->getOrder();
+        $transition = $order->getState()->getWorkflow()->getTransition('validate');
+        $order->getState()->applyTransition($transition);
+      }
 
       return new JsonResponse('OK');
     }
