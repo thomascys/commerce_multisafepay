@@ -5,5 +5,7 @@
   "keywords": ["Drupal"],
   "license": "MIT",
   "minimum-stability": "dev",
-  "require": { }
+  "require": {
+    "drupal/commerce": "~2.0"
+  }
 }
