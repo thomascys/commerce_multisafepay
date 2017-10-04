@@ -42,6 +42,10 @@ class MultiSafepayPaymentOffsiteForm extends PaymentOffsiteForm {
 
     $this->multiSafepayClient->setOptions($api_key, $mode);
 
+    $country_code = strtoupper($payment->getOrder()->getStore()->getAddress()->getCountryCode());
+    $language_code = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $locale = sprintf('%s_%s', $language_code, $country_code);
+
     $data = [
       'type' => 'redirect',
       'order_id' => $payment->getOrderId(),
@@ -50,10 +54,13 @@ class MultiSafepayPaymentOffsiteForm extends PaymentOffsiteForm {
       'gateway' => NULL,
       'description' => sprintf('order %s', $payment->getOrderId()),
       'payment_options' => [
-        'notification_url' => $$payment_gateway_plugin->getNotifyUrl()->toString(),
+        'notification_url' => $payment_gateway_plugin->getNotifyUrl()->toString(),
         'redirect_url' => $form['#return_url'],
         'cancel_url' => $form['#cancel_url'],
         'close_window' => TRUE,
+      ],
+      'customer' => [
+        'locale' => $locale,
       ],
     ];
 

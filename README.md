@@ -17,6 +17,6 @@ composer require drupal/commerce_multisafepay:dev-master
 ```
 
 ## Todo
-- Locale
+- ~~Locale~~
 - Refunds
 - Tests
