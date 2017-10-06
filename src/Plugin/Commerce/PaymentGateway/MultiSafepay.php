@@ -58,7 +58,6 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, PaymentTypeManager $payment_type_manager, PaymentMethodTypeManager $payment_method_type_manager, MultiSafepayClientInterface $multisafepay_client, TimeInterface $time) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $payment_type_manager, $payment_method_type_manager, $time);
     $this->multiSafepayClient = $multisafepay_client;
-    $this->multiSafepayClient->setOptions($configuration['api_key'], $configuration['mode']);
   }
 
   /**
@@ -139,6 +138,9 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
    *   The json response.
    */
   public function onNotify(Request $request) {
+    // Set client options.
+    $this->multiSafepayClient->setOptions($this->configuration['api_key'], $this->configuration['mode']);
+
     $remote_id = $request->get('transactionid');
     // Return early if there's no transaction id.
     if (empty($remote_id)) {
