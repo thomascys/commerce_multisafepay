@@ -46,7 +46,7 @@ abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
    * @throws \Exception
    *   Exception.
    */
-  public function handleRequest(string $http_method, string $method, array $data = []) {
+  public function handleRequest($http_method, $method, array $data = []) {
     $options = $this->buildOptions($http_method, $data);
 
     try {
@@ -73,7 +73,7 @@ abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
    * @return array
    *   Options.
    */
-  protected function buildOptions(string $http_method, array $data) {
+  protected function buildOptions($http_method, array $data) {
     switch ($http_method) {
       case 'POST':
         $options = $this->options + ['form_params' => $data];
@@ -94,7 +94,7 @@ abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
    * @param string $mode
    *   Api mode.
    */
-  public function setOptions(string $api_key, string $mode = 'test') {
+  public function setOptions($api_key, $mode = 'test') {
     $this->options = [
       'base_uri' => $mode === 'live' ? self::API_LIVE_URL : self::API_TEST_URL,
       'headers' => [
