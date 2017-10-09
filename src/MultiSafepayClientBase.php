@@ -41,7 +41,7 @@ abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
    *   Data array.
    *
    * @return array
-   *   Reponse.
+   *   Response.
    *
    * @throws \Exception
    *   Exception.
