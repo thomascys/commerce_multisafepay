@@ -44,4 +44,25 @@ final class MultiSafepayClient extends MultiSafepayClientBase {
     return $response;
   }
 
+  /**
+   * Refund a MultiSafepay order.
+   *
+   * @param string $order_id
+   *   The order id.
+   * @param string $amount
+   *   The amount.
+   * @param string $currency
+   *   The currency.
+   *
+   * @return array
+   *   The order array.
+   */
+  public function createRefund($order_id, $amount, $currency) {
+    $method = sprintf('orders/%s/refunds', $order_id);
+    $data = ['amount' => $amount, 'currency' => $currency, 'type' => 'refund'];
+    $response = $this->handleRequest('POST', $method, $data);
+
+    return $response;
+  }
+
 }

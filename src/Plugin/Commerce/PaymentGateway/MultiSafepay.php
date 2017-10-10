@@ -3,9 +3,11 @@
 namespace Drupal\commerce_multisafepay\Plugin\Commerce\PaymentGateway;
 
 use Drupal\commerce_multisafepay\MultiSafepayClientInterface;
+use Drupal\commerce_payment\Entity\PaymentInterface;
 use Drupal\commerce_payment\PaymentMethodTypeManager;
 use Drupal\commerce_payment\PaymentTypeManager;
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\OffsitePaymentGatewayBase;
+use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\SupportsRefundsInterface;
 use Drupal\commerce_price\Price;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -26,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   }
  * )
  */
-class MultiSafepay extends OffsitePaymentGatewayBase {
+class MultiSafepay extends OffsitePaymentGatewayBase implements SupportsRefundsInterface {
 
   /**
    * MultiSafepayClient.
@@ -126,6 +128,26 @@ class MultiSafepay extends OffsitePaymentGatewayBase {
       $values = $form_state->getValue($form['#parents']);
       $this->configuration['api_key'] = $values['api_key'];
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function refundPayment(PaymentInterface $payment, Price $amount = NULL) {
+    $this->assertPaymentState($payment, ['completed', 'partially_refunded']);
+    $this->assertRefundAmount($payment, $amount);
+
+    // Set client options.
+    $this->multiSafepayClient->setOptions($this->configuration['api_key'], $this->configuration['mode']);
+
+    $order_id = $payment->getRemoteId();
+    $currency = $amount->getCurrencyCode();
+    $price = $amount->getNumber() * 100;
+    $this->multiSafepayClient->createRefund($order_id, $price, $currency);
+
+    $payment->setRefundedAmount($amount);
+    $payment->save();
+
   }
 
   /**
