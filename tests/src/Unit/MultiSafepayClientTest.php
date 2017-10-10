@@ -12,6 +12,8 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
 /**
+ * Commerce MultiSafepayClient tests.
+ *
  * @group commerce_multisafepay
  */
 class MultiSafepayClientTest extends UnitTestCase {
