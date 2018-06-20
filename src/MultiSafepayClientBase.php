@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
  *
  * @package Drupal\commerce_multisafepay
  */
-abstract class MultiSafepayClientBase implements MultiSafepayClientInterface {
+abstract class MultiSafepayClientBase {
   const API_TEST_URL = 'https://testapi.multisafepay.com/v1/json/';
   const API_LIVE_URL = 'https://api.multisafepay.com/v1/json/';
   protected $client;

@@ -7,16 +7,9 @@ namespace Drupal\commerce_multisafepay;
  *
  * @package Drupal\commerce_multisafepay
  */
-final class MultiSafepayClient extends MultiSafepayClientBase {
-
+final class MultiSafepayClient extends MultiSafepayClientBase implements MultiSafepayClientInterface {
   /**
-   * Create the MultiSafepay order.
-   *
-   * @param array $data
-   *   Array needed to create an order.
-   *
-   * @return null|string
-   *   Return the payment url.
+   * {@inheritdoc}
    */
   public function createOrder(array $data) {
     $response = $this->handleRequest('POST', 'orders', $data);
@@ -29,13 +22,7 @@ final class MultiSafepayClient extends MultiSafepayClientBase {
   }
 
   /**
-   * Load a MultiSafepay order.
-   *
-   * @param string $order_id
-   *   The order id.
-   *
-   * @return array
-   *   The order array.
+   * {@inheritdoc}
    */
   public function loadOrder($order_id) {
     $method = sprintf('orders/%s', $order_id);
@@ -45,17 +32,7 @@ final class MultiSafepayClient extends MultiSafepayClientBase {
   }
 
   /**
-   * Refund a MultiSafepay order.
-   *
-   * @param string $order_id
-   *   The order id.
-   * @param string $amount
-   *   The amount.
-   * @param string $currency
-   *   The currency.
-   *
-   * @return array
-   *   The order array.
+   * {@inheritdoc}
    */
   public function createRefund($order_id, $amount, $currency) {
     $method = sprintf('orders/%s/refunds', $order_id);
