@@ -19,8 +19,3 @@ Require this module:
 ```
 composer require drupal/commerce_multisafepay:dev-master
 ```
-
-## Todo
-- ~~Locale~~
-- Refunds
-- Tests
