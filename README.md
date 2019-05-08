@@ -10,12 +10,6 @@ Please report bugs in the [issue queue](https://www.drupal.org/project/issues/co
 
 Use [Composer](https://getcomposer.org/) to get Drupal + Commerce with all dependencies.
 
-Add this repository to the repositories list:
 ```
-composer config repositories.thomascys vcs https://github.com/thomascys/commerce_multisafepay
-```
-Require this module:
-
-```
-composer require drupal/commerce_multisafepay:dev-master
+composer require drupal/commerce_multisafepay
 ```
